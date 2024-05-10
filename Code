@@ -1,0 +1,117 @@
+#include <iostream>
+#include <set>
+using namespace std;
+const int M = 20, N = 20; //максимальна кількість рядків і стовпців
+
+//функція введення матриці
+void get_matr(int in_matr[M][N], int& in_m, int& in_n, int k = 1)
+{
+    do
+    {
+        cout << "Enter rows count (2...20): ";
+        cin >> in_m;
+    } while (in_m < 2 || in_m > 20 || in_m % k != 0);
+    //доки не коректна кількість рядків
+    do
+    {
+        cout << "Enter columns count (2...20): ";
+        cin >> in_n;
+    } while (in_n < 2 || in_n > 20 || in_n % k != 0);
+    //доки не коректна кількість стовпців
+
+    cout << "Enter elements\n";
+    for (int i = 0; i < in_m; i++)
+        for (int j = 0; j < in_n; j++)
+            cin >> in_matr[i][j];
+}
+
+//функція виведення масиву
+void show_matr(const int out_matr[M][N], const int m, const int n)
+{
+    cout << "Matrix:\n";
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << out_matr[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+//функція пошуку унікальних рядків
+int countUniqueRows(int matrix[M][N], int m, int n) {
+    int uniqueRows = 0;
+    for (int i = 0; i < m; ++i) {
+        set<int> rowSet;
+        for (int j = 0; j < n; ++j) {
+            if (rowSet.find(matrix[i][j]) != rowSet.end()) {
+                break; // Знайдено дублікат, переходимо до наступного рядка
+            }
+            rowSet.insert(matrix[i][j]);
+        }
+        if (rowSet.size() == n) {
+            ++uniqueRows; // Усі елементи рядка унікальні
+        }
+    }
+    return uniqueRows;
+}
+
+
+//функція для зміни місць лівої верхньої і правої нижної чвертей
+void swapQuarters(int matrix[M][N], int m, int n)
+{
+    int middle_m = m / 2;
+    int middle_n = n / 2;
+
+    for (int i = 0; i < middle_m; i++)
+    {
+        for (int j = 0; j < middle_n; j++) {
+            int tmp = matrix[i][j];
+            matrix[i][j] = matrix[i + middle_m][j + middle_n];
+            matrix[i + middle_m][j + middle_n] = tmp;
+        }
+    }
+}
+
+
+
+
+
+int main()
+{
+    int taskChoise;
+    char continueChoise;
+    int matr[M][N];
+    int row, col;
+
+    do
+    {
+        do
+        {
+            cout << "Type 0 to find unique rows of matrix\n" <<
+                "Type 1 to swap the elements between the top-left and bottom-right quarters of a matrix\n";
+            cin >> taskChoise;
+        } while (taskChoise != 0 && taskChoise != 1);
+
+        if (taskChoise == 0) {
+            get_matr(matr, row, col);
+            show_matr(matr, row, col);
+            cout << "Number of unicue rows = " << countUniqueRows(matr, row, col) << endl;
+
+        }
+        else {
+            get_matr(matr, row, col, 2);
+            show_matr(matr, row, col);
+            swapQuarters(matr, row, col);
+            show_matr(matr, row, col);
+        }
+
+        cout << endl << "Continue Y/N? : ";
+        cin >> continueChoise;
+
+    } while (continueChoise == 'y' || continueChoise == 'Y');
+
+    return 0;
+}
+
